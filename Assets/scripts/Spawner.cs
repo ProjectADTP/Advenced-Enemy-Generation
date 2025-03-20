@@ -1,19 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private Enemy _enemyPrefab;
-    [SerializeField] private List<Target> _targerPoints;
+    [SerializeField] private List<SpawnerPoint> _spawners;
+    [SerializeField] private float _spawnInterval = 1f;
 
-    public void Initiate()
+    private WaitForSeconds _wait;
+
+    private void Awake()
     {
-        if (_targerPoints.Count > 0)
+        if (_spawners.Count > 0)
         {
-            Enemy enemy = Instantiate(_enemyPrefab, transform.position, transform.rotation);
-            enemy.AssignPath(_targerPoints);
+            _wait = new WaitForSeconds(_spawnInterval);
+
+            StartCoroutine(SpawnEnemies());
+        }
+    }
+
+    private IEnumerator SpawnEnemies()
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < _spawnInterval)
+        {
+            elapsedTime += Time.deltaTime;
+
+            SpawnerPoint spawner = _spawners[Random.Range(0, _spawners.Count)];
+            spawner.Initiate();
+
+            yield return _wait;
         }
     }
 }
