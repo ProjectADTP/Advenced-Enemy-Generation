@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private List<SpawnerPoint> _spawners;
-    [SerializeField] private float _spawnInterval = 1f;
+    [SerializeField] private List<SpawnerPoint> _spawnerPoints;
+    [SerializeField] private float _spawnInterval = 3f;
 
     private WaitForSeconds _wait;
 
     private void Awake()
     {
-        if (_spawners.Count > 0)
+        if (_spawnerPoints.Count > 0)
         {
             _wait = new WaitForSeconds(_spawnInterval);
 
@@ -27,8 +27,8 @@ public class Spawner : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
 
-            SpawnerPoint spawner = _spawners[Random.Range(0, _spawners.Count)];
-            spawner.Initiate();
+            SpawnerPoint spawnerPoint = _spawnerPoints[Random.Range(0, _spawnerPoints.Count)];
+            spawnerPoint.Initiate();
 
             yield return _wait;
         }

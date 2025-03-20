@@ -4,37 +4,24 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float _speed = 5f;
+    [SerializeField] private float _speed;
+    private Transform _target;
 
-    private Transform[] _waypoints;
-
-    private int _currentWaypoint = 0;
-
-    private IEnumerator MoveToTargets()
+    public void Initialise(Target target)
     {
-        while (_currentWaypoint < _waypoints.Length - 1) 
-        {
-            if (transform.position == _waypoints[_currentWaypoint].position)
-                _currentWaypoint = (_currentWaypoint + 1) % _waypoints.Length;
-           
-            transform.position = Vector3.MoveTowards(transform.position, _waypoints[_currentWaypoint].position, _speed * Time.deltaTime);
+        _target = target.transform;
 
-            yield return null;
-        } 
+        StartCoroutine(MoveToTarget());
     }
 
-    public void AssignPath(List<Target> targets)
+    private IEnumerator MoveToTarget()
     {
-        _waypoints = new Transform[targets.Count];
-
-        int i = 0;
-
-        foreach (var target in targets)
+        while (_target != null) 
         {
-            _waypoints[i] = target.transform;
-            i++;
-        }
+            Vector3 direction = (_target.position - transform.position).normalized;
+            transform.Translate(direction * _speed * Time.deltaTime, Space.World);
 
-        StartCoroutine(MoveToTargets());
+            yield return null;
+        }
     }
 }

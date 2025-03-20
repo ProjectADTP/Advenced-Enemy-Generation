@@ -11,7 +11,7 @@ public class SpawnerPoint : MonoBehaviour
         if (_targerPoints.Count > 0)
         {
             Enemy enemy = Instantiate(_enemyPrefab, transform.position, transform.rotation);
-            enemy.AssignPath(_targerPoints);
+            enemy.Initialise(_targerPoints[Random.Range(0, _targerPoints.Count)]);
         }
     }
 }
